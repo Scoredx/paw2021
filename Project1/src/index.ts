@@ -52,5 +52,4 @@ class StatsApp {
         this.maxInput.value = max.toString();
     }
 }
-
 const statsApp = new StatsApp();
