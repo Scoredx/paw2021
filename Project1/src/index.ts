@@ -1,12 +1,8 @@
 class StatsApp {
-    data1Input: HTMLInputElement;
-    data2Input: HTMLInputElement;
-    data3Input: HTMLInputElement;
-    data4Input: HTMLInputElement;
-    sumInput: HTMLInputElement;
-    avgInput: HTMLInputElement;
-    minInput: HTMLInputElement;
-    maxInput: HTMLInputElement;
+    numberInput: HTMLInputElement;
+    inputsDiv: HTMLDivElement;
+    inputField: HTMLInputElement;
+    resulfDiv: HTMLDivElement;
 
     constructor() {
         this.startApp();
@@ -15,23 +11,67 @@ class StatsApp {
     startApp(){
         this.getInputs();
         this.watchInputValue();
+        this.generateResult();
     }
     getInputs(){
-        this.data1Input = document.querySelector('#data1');
-        this.data2Input = document.querySelector('#data2');
-        this.data3Input = document.querySelector('#data3');
-        this.data4Input = document.querySelector('#data4');
-        this.sumInput = document.querySelector('#sum');
-        this.avgInput = document.querySelector('#avg');
-        this.minInput = document.querySelector('#min');
-        this.maxInput = document.querySelector('#max');
+        this.numberInput = document.querySelector('#number');
+        this.inputsDiv = document.querySelector('#inputsDiv');
+        this.resulfDiv = document.querySelector('#resultsDiv');
+
     }
     watchInputValue() {
-        this.data1Input.addEventListener('input',() => this.computeData());
-        this.data2Input.addEventListener('input',() => this.computeData());
-        this.data3Input.addEventListener('input',() => this.computeData());
-        this.data4Input.addEventListener('input',() => this.computeData());
+        this.numberInput.addEventListener('input',() => this.generateInputFields());
+        return;
     }
+
+    generateInputFields(){
+        let number: number = 1;
+        this.inputsDiv.innerHTML = null;
+        for(let n = 0; n < parseInt(this.numberInput.value); n++){
+            const elementInput = document.createElement('input');
+            elementInput.type = "number";
+            elementInput.id = "input" + n;
+            const elementBr = document.createElement('br');
+            elementBr.id = "br" + n;
+
+            this.inputsDiv.appendChild(elementBr);
+            this.inputsDiv.appendChild(elementInput);
+            number = n;
+        }
+    }
+    generateResult(){
+        let sum: HTMLParagraphElement;
+        let avg: HTMLParagraphElement;
+        let min: HTMLParagraphElement;
+        let max: HTMLParagraphElement;
+
+        sum = document.createElement("p");
+        sum.textContent = "Sum = ";
+        this.resulfDiv.appendChild(sum);
+
+        avg = document.createElement("p");
+        avg.textContent = "Avg = ";
+        this.resulfDiv.appendChild(avg);
+
+        min = document.createElement("p");
+        min.textContent = "Min = ";
+        this.resulfDiv.appendChild(min);
+
+        max = document.createElement("p");
+        max.textContent = "Max = ";
+        this.resulfDiv.appendChild(max);
+    }
+
+        /*
+        let inputList: number[];
+        for(let m = 0; m < this.inputsDiv.childElementCount; m++){
+
+            this.inputField = document.querySelector("#input"+m);
+            let p = parseInt(this.inputField.value);
+            inputList.push(p);
+        }
+        */
+    /*
     computeData(){
         const data1 = +this.data1Input.value;
         const data2 = +this.data2Input.value;
@@ -45,11 +85,14 @@ class StatsApp {
 
         this.showStats(sum,avg,min,max);
     }
+
     showStats(sum: number, avg: number, min: number, max: number){
         this.sumInput.value = sum.toString();
         this.avgInput.value = avg.toString();
         this.minInput.value = min.toString();
         this.maxInput.value = max.toString();
     }
+    */
 }
+
 const statsApp = new StatsApp();
