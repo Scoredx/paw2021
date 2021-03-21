@@ -27,7 +27,6 @@ class InputFieldContainerGenerator{
    
     constructor(inputId, count, inputValuesArray: Array<number>) 
     {
-
         // input-field generator
         this.inputNumber.innerText = inputId + 1 + ".";
         this.numberInput = document.createElement('input');
