@@ -1,6 +1,6 @@
 .sobundBbutton {
-    width: 100px;
-    height: 100px;
+    width: 140px;
+    height: 120px;
     margin-left: 10px;
     margin-bottom: 10px;
     border-radius: 10px;
@@ -13,14 +13,14 @@
     height: 40px;
     margin-right: 3px;
     border-radius: 5px;
-    background-color: rgb(221, 19, 19);
+    background-color: rgb(87, 63, 63);
 }
 .playerButtonStart{
     width: 40px;
     height: 40px;
-    margin-right: 3px;
+    margin-right: 3px;  
     border-radius: 5px;
-    background-color: greenyellow;
+    background-color: rgb(10, 247, 22);
 }
 
 
