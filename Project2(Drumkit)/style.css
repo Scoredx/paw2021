@@ -22,7 +22,12 @@
     border-radius: 5px;
     background-color: rgb(10, 247, 22);
 }
-
+p{
+    display: flex;
+    justify-content: center;
+    font-weight: bold;
+    font-family: Arial, Helvetica, sans-serif;
+}
 
 .playerCheckBox{
     margin-top: 15px;
