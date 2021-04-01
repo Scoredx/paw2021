@@ -17,108 +17,58 @@ enum Sounds {
     snare = 6,
     tink = 7
 }
-const playButtonsArray: HTMLButtonElement[] = [document.querySelector('#track1Play'),
-                                          document.querySelector('#track2Play'),
-                                          document.querySelector('#track3Play'),
-                                          document.querySelector('#track4Play')
-                                        ];
-const recordButtonsArray: HTMLButtonElement[] = [document.querySelector('#track1Record'),
-                                            document.querySelector('#track2Record'),
-                                            document.querySelector('#track3Record'),
-                                            document.querySelector('#track4Record')];
+const playButtons: HTMLButtonElement[] = [
+    document.querySelector('#track1Play'),
+    document.querySelector('#track2Play'),
+    document.querySelector('#track3Play'),
+    document.querySelector('#track4Play')
+  ];
+const recordButtons: HTMLButtonElement[] = [
+      document.querySelector('#track1Record'),
+      document.querySelector('#track2Record'),
+      document.querySelector('#track3Record'),
+      document.querySelector('#track4Record')
+    ];
+const checkBoxes: HTMLInputElement[] = [
+  document.querySelector('#track1Checkbox'),
+  document.querySelector('#track2Checkbox'),
+  document.querySelector('#track3Checkbox'),
+  document.querySelector('#track4Checkbox')
+];
+const PlaySelectedButton: HTMLInputElement = document.querySelector('#PlaySelectedButton');
+const chanels: {key,time}[][] = [];
+const startRecordTimes: number[] = [];
 
-const checkBoxesArray: HTMLInputElement[] = [document.querySelector('#track1Checkbox'),
-                                            document.querySelector('#track2Checkbox'),
-                                            document.querySelector('#track3Checkbox'),
-                                            document.querySelector('#track4Checkbox')];
+document.body.addEventListener('keypress', handleKeyPress);
+PlaySelectedButton.addEventListener('click', playSelectedTracks);
 
-document.body.addEventListener('keypress', onKeyPress);
+recordButtons.forEach((button, i: number) => button.addEventListener('click', (ev) => {
+    chanels[i] = [];
+    startRecordTimes[i] = ev.timeStamp;
+}))
 
-recordButtonsArray[0].addEventListener('click', recordChannel1);
-recordButtonsArray[1].addEventListener('click', recordChannel2);
-recordButtonsArray[2].addEventListener('click', recordChannel3);
-recordButtonsArray[3].addEventListener('click', recordChannel4);
+playButtons.forEach((button, i: number) => button.addEventListener('click', () => {
+        chanels[i].forEach(sound =>{
+        const timeout = sound.time - startRecordTimes[i];
+        setTimeout(() => playSound(sound.key),timeout);
+    })
+}))
 
-playButtonsArray[0].addEventListener('click', playChannel1);
-playButtonsArray[1].addEventListener('click', playChannel2);
-playButtonsArray[2].addEventListener('click', playChannel3);
-playButtonsArray[3].addEventListener('click', playChannel4);
-
-let channel1: any[] = [];
-let channel2: any[] = [];
-let channel3: any[] = [];
-let channel4: any[] = [];
-
-let startRecordTime1: number = 0;
-let startRecordTime2: number = 0;
-let startRecordTime3: number = 0;
-let startRecordTime4: number = 0;
-
-function  trackCheckboxCheck(checkbox: HTMLInputElement): boolean{
-    if(checkbox.checked === true){
-        return true;
-    }
-    if(checkbox.checked === false){
-        return false;
-    }
-}
-
-function onKeyPress(ev: KeyboardEvent): void {
-
+function handleKeyPress(ev: KeyboardEvent): void {
     const key = ev.key;
     const time = ev.timeStamp;
 
-    if(trackCheckboxCheck(checkBoxesArray[0])){
-        channel1.push({
+    checkBoxes.forEach((checkbox, i) => {
+        if(checkBoxes[i].checked) {
+            chanels[i].push({
             key,
             time
-        })
-    }
-    if(trackCheckboxCheck(checkBoxesArray[1])){
-        channel2.push({
-            key,
-            time
-        })
-    }
-    if(trackCheckboxCheck(checkBoxesArray[2])){
-        channel3.push({
-            key,
-            time
-        })
-    }
-    if(trackCheckboxCheck(checkBoxesArray[3])){
-        channel4.push({
-            key,
-            time
-        })
-    }
+            })
+        }
+    })
     playSound(key);
-    console.log(channel1);
-    //console.log(channel2);
-    //console.log(channel3);
-    //console.log(channel4);
 }   
 
-function recordChannel1(ev: Event): void{
-    channel1 = [];
-    startRecordTime1 = ev.timeStamp;
-    console.log(ev.timeStamp);
-}
-function recordChannel2(ev: Event): void{
-    channel1 = [];
-    startRecordTime2 = ev.timeStamp;
-    console.log(ev.timeStamp);
-}
-function recordChannel3(ev: Event): void{
-    channel1 = [];
-    startRecordTime3 = ev.timeStamp;
-    console.log(ev.timeStamp);
-}
-function recordChannel4(ev: Event): void{
-    channel1 = [];
-    startRecordTime4 = ev.timeStamp;
-    console.log(ev.timeStamp);
-}
 function playSound(key: string){
 
     switch(key){
@@ -164,36 +114,15 @@ function playSound(key: string){
     }
 }
 
-function playChannel1(): void {
-
-    channel1.forEach(sound =>{
-        console.log(startRecordTime1 - sound.time);
-        const timeout = sound.time - startRecordTime1;
-        setTimeout(() => playSound(sound.key),timeout);
-    })
-}
-function playChannel2(): void {
-
-    channel2.forEach(sound =>{
-        const timeout = sound.time - startRecordTime2;
-        setTimeout(() => playSound(sound.key),timeout);
-    })
-}
-
-function playChannel3(): void {
-
-    channel3.forEach(sound =>{
-        const timeout = sound.time - startRecordTime3;
-        setTimeout(() => playSound(sound.key),timeout);
-    })
-}
-
-function playChannel4(): void {
-
-    channel4.forEach(sound =>{
-        const timeout = sound.time - startRecordTime4;
-        setTimeout(() => playSound(sound.key),timeout);
-    })
+function playSelectedTracks() {
+    checkBoxes.forEach((box, i:number) => {
+        if(checkBoxes[i].checked){
+            chanels[i].forEach(sound =>{
+                const timeout = sound.time - startRecordTimes[i];
+                setTimeout(() => playSound(sound.key),timeout);
+            })
+        }
+    });
 }
 
 
