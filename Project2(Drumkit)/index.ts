@@ -37,6 +37,10 @@ const checkBoxes: HTMLInputElement[] = [
 ];
 const PlaySelectedButton: HTMLInputElement = document.querySelector('#PlaySelectedButton');
 const chanels: {key,time}[][] = [];
+chanels[0]=[];
+chanels[1]=[];
+chanels[2]=[];
+chanels[3]=[];
 const startRecordTimes: number[] = [];
 
 document.body.addEventListener('keypress', handleKeyPress);

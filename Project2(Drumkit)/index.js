@@ -38,6 +38,10 @@ var checkBoxes = [
 ];
 var PlaySelectedButton = document.querySelector('#PlaySelectedButton');
 var chanels = [];
+chanels[0] = [];
+chanels[1] = [];
+chanels[2] = [];
+chanels[3] = [];
 var startRecordTimes = [];
 document.body.addEventListener('keypress', handleKeyPress);
 PlaySelectedButton.addEventListener('click', playSelectedTracks);
