@@ -24,9 +24,11 @@ class InputFieldContainerGenerator{
     removeInputButton: HTMLButtonElement;
     inputFieldsDiv: HTMLDivElement;
     inputNumber = document.createElement("b")
+    inputfields: HTMLDivElement = document.querySelector("#inputFieldsDiv");
    
     constructor(inputId, count, inputValuesArray: Array<number>) 
     {
+        
         // input-field generator
         this.inputNumber.innerText = inputId + 1 + ".";
         this.numberInput = document.createElement('input');
@@ -62,6 +64,8 @@ class InputFieldContainerGenerator{
         inputFieldContainer.appendChild(this.inputNumber);
         inputFieldContainer.appendChild(this.numberInput);
         inputFieldContainer.appendChild(this.removeInputButton);
+       
+
         return inputFieldContainer;
     }
 }
