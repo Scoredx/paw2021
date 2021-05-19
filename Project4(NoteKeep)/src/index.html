@@ -3,13 +3,23 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Weatherman</title>
+    <title>KeepNote</title>
   </head>
   <body>
-    <div id="city">
-      <p>Input City:</p>
-
+    <div id="inputContainer">
+      <div id="input">
+        <div>
+          <p>Title:</p>
+          <input id="inputTitle" class="inputField" type="text">
+        </div>
+        <div>
+          <p>Note:</p>
+          <textarea id="inputText" class="inputField" type="text"></textarea>
+        </div>
+      </div>
+      <button type="button" id="submitButton">ADD</button>
     </div>
+
     <div id="result">
 
     </div>
