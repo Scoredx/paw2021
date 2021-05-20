@@ -5,23 +5,21 @@ const resultDiv: HTMLDivElement = document.querySelector("#result");
 const inputTitle: HTMLInputElement = document.querySelector("#inputTitle");
 const inputText: HTMLInputElement = document.querySelector("#inputText");
 const submitButton: HTMLButtonElement = document.querySelector("#submitButton");
-const noteCloseButton: HTMLButtonElement = document.querySelector(".noteCloseButton");
-
 
 submitButton.addEventListener('click', () => {
-
     resultDiv.appendChild(app.createNote(inputTitle.value, inputText.value));
-    app.getTitle(inputTitle.value);
-    app.getText(inputText.value);
+    app.titleToArr(inputTitle.value);
+    app.textToArr(inputText.value);
 
 });
 
-
 window.addEventListener('beforeunload', function() {
-    app.saveTitleAndText(app.titleArr, app.textArr);
+    console.log(app.titleArr, app.textArr);
+    app.saveToLS(app.titleArr, app.textArr);
 });
 
 window.addEventListener('load', () => {
+    
     let titlesLS: string[] = app.getTitlesFromLS();
     let textLS: string[] = app.getTextFromLS();
 
@@ -29,7 +27,11 @@ window.addEventListener('load', () => {
         titlesLS.forEach((x, index) => {
             app.titleArr[index] = titlesLS[index];
             app.textArr[index] = textLS[index];
-            resultDiv.appendChild(app.createNote(titlesLS[index],textLS[index]));
+
+            if(app.titleArr.length >= 1 &&  app.textArr.length >= 1){
+                resultDiv.appendChild(app.createNote(titlesLS[index],textLS[index]));
+            }
+
         });
     }
 });

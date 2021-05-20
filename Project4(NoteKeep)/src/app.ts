@@ -6,21 +6,17 @@ export class App {
     constructor() {
         
     }
-    getTitle(titleString: string){
+    
+    titleToArr(titleString: string){
         this.titleArr.push(titleString);
         console.log(this.titleArr);
     }
-    getText(textString: string){
+    textToArr(textString: string){
         this.textArr.push(textString)
         console.log(this.textArr);
     }
 
-    saveData(data:any){
-        localStorage.setItem('weatherData', JSON.stringify(data));
-    }
-
-
-    saveTitleAndText(titles: string[], text: string[]){
+    saveToLS(titles: string[], text: string[]){
         localStorage.setItem('titles', JSON.stringify(titles));
         localStorage.setItem('text', JSON.stringify(text));
     }
@@ -75,16 +71,17 @@ export class App {
         noteCloseButton.className = "noteCloseButton";
         noteCloseButton.innerHTML = 'X';
 
-        noteCloseButton.onclick = function(){
+        noteCloseButton.onclick = () => { 
             noteCloseButton.parentNode.parentNode.parentNode.removeChild(noteCloseButton.parentNode.parentNode);
+            this.titleArr.splice(this.titleArr.indexOf(noteTitle),1);;
+            this.textArr.splice(this.textArr.indexOf(noteText),1);;
         }
-
 
         let noteTextArea: HTMLTextAreaElement = document.createElement("textarea");
         noteTextArea.id = "noteTextArea" + this.counter;
         noteTextArea.className = "noteTextArea";
         noteTextArea.innerHTML = noteText;
-        noteTextArea.rows =8;
+        noteTextArea.rows = 8;
 
         note.appendChild(noteDragDiv);
         note.appendChild(noteInnerWrapper);
@@ -93,7 +90,6 @@ export class App {
         noteTitleDiv.appendChild(title);
         noteInnerWrapper.appendChild(noteCloseButton);
         noteInnerWrapper.appendChild(noteTextArea);
-        
 
         this.counter++;
         return note;
