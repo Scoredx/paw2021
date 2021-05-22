@@ -2,19 +2,20 @@ import { App } from './app';
 import './main.scss';
 
 const resultDiv: HTMLDivElement = document.querySelector("#result");
+const pinned: HTMLDivElement = document.querySelector("#pinned");
+const notes: HTMLDivElement = document.querySelector("#notes");
 const inputTitle: HTMLInputElement = document.querySelector("#inputTitle");
 const inputText: HTMLInputElement = document.querySelector("#inputText");
 const submitButton: HTMLButtonElement = document.querySelector("#submitButton");
 
 submitButton.addEventListener('click', () => {
-    resultDiv.appendChild(app.createNote(inputTitle.value, inputText.value));
+    notes.appendChild(app.createNote(inputTitle.value, inputText.value));
     app.titleToArr(inputTitle.value);
     app.textToArr(inputText.value);
-
 });
 
 window.addEventListener('beforeunload', function() {
-    console.log(app.titleArr, app.textArr);
+    //console.log(app.titleArr, app.textArr);
     app.saveToLS(app.titleArr, app.textArr);
 });
 
@@ -29,9 +30,8 @@ window.addEventListener('load', () => {
             app.textArr[index] = textLS[index];
 
             if(app.titleArr.length >= 1 &&  app.textArr.length >= 1){
-                resultDiv.appendChild(app.createNote(titlesLS[index],textLS[index]));
-            }
-
+                notes.appendChild(app.createNote(titlesLS[index],textLS[index]));
+            };
         });
     }
 });
