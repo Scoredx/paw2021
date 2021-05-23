@@ -1,39 +1,41 @@
 import { App } from './app';
 import './main.scss';
+const app = new App();
 
-const resultDiv: HTMLDivElement = document.querySelector("#result");
-const pinned: HTMLDivElement = document.querySelector("#pinned");
+const pinned: HTMLDivElement = document.querySelector("#pinnedNotes");
 const notes: HTMLDivElement = document.querySelector("#notes");
 const inputTitle: HTMLInputElement = document.querySelector("#inputTitle");
 const inputText: HTMLInputElement = document.querySelector("#inputText");
 const submitButton: HTMLButtonElement = document.querySelector("#submitButton");
 
+app.pinnedDiv= pinned;
+app.notesDiv = notes;
+
 submitButton.addEventListener('click', () => {
-    notes.appendChild(app.createNote(inputTitle.value, inputText.value));
-    app.titleToArr(inputTitle.value);
-    app.textToArr(inputText.value);
+
+    let note = app.saveToNote(inputTitle.value,inputText.value, "lightgray", false);
+    app.noteToArr(note);
+    notes.appendChild(app.createNote(note));
+    
 });
 
 window.addEventListener('beforeunload', function() {
-    //console.log(app.titleArr, app.textArr);
-    app.saveToLS(app.titleArr, app.textArr);
+    app.saveToLocalStorage(app.noteArr);
 });
 
 window.addEventListener('load', () => {
-    
-    let titlesLS: string[] = app.getTitlesFromLS();
-    let textLS: string[] = app.getTextFromLS();
 
-    if(titlesLS && textLS){
-        titlesLS.forEach((x, index) => {
-            app.titleArr[index] = titlesLS[index];
-            app.textArr[index] = textLS[index];
-
-            if(app.titleArr.length >= 1 &&  app.textArr.length >= 1){
-                notes.appendChild(app.createNote(titlesLS[index],textLS[index]));
-            };
+    app.noteLS = app.getNotesFromLocalStorage();
+    if(app.noteLS){
+        app.noteLS.forEach((elem, index) => {
+            app.noteArr[index] = app.noteLS[index];
+            
+            if(app.noteLS[index].isPinned){
+                pinned.appendChild(app.createNote(app.noteLS[index]));
+            }else{
+                notes.appendChild(app.createNote(app.noteLS[index]));
+            }
         });
     }
 });
 
-const app = new App();

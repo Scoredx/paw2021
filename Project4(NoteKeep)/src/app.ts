@@ -1,30 +1,36 @@
 export class App {
-    titleArr: string[] = [];
-    textArr: string[] = [];
+
+    noteLS: Note[] = [];
+    noteArr: Note[] = [];
+    pinnedDiv: HTMLDivElement;
+    notesDiv: HTMLDivElement;
     counter: number = 0;
+   
 
-    constructor() {
-        
-    }
-    
-    titleToArr(titleString: string){
-        this.titleArr.push(titleString);
-        //console.log(this.titleArr);
-    }
-    textToArr(textString: string){
-        this.textArr.push(textString)
-       // console.log(this.textArr);
-    }
-
-    saveToLS(titles: string[], text: string[]){
-        localStorage.setItem('titles', JSON.stringify(titles));
-        localStorage.setItem('text', JSON.stringify(text));
+    saveToNote(noteTitle: string, noteText: string, noteBgColor: string, isNotePinned: boolean){
+        let newDate = new Date();
+        let note: Note = {
+            title: noteTitle,
+            text: noteText,
+            bgColor: noteBgColor,
+            isPinned: isNotePinned,
+            date: newDate.toISOString().split('T')[0]
+        }
+        return note;
     }
 
-    getTitlesFromLS(){
-        const titles = localStorage.getItem('titles');
-        if (titles) {
-            return JSON.parse(titles);
+    noteToArr(note: Note){
+        this.noteArr.push(note);
+    }
+
+    saveToLocalStorage(noteArr: Note[]){
+        localStorage.setItem("noteLS", JSON.stringify(noteArr));
+    }
+
+    getNotesFromLocalStorage(){
+        const notes = localStorage.getItem("noteLS");
+        if (notes) {
+            return JSON.parse(notes);
         } 
         else 
         {
@@ -32,21 +38,11 @@ export class App {
         }
     }
 
-    getTextFromLS(){
-        const text = localStorage.getItem('text');
-        if (text) {
-            return JSON.parse(text);
-        } 
-        else 
-        {
-            return;
-        }
-    }
-
-    createNote(noteTitle: string, noteText: string){
-        let note: HTMLDivElement = document.createElement("div");
-        note.id = "note" + this.counter;
-        note.className = "note";
+    createNote(note: Note){
+        let noteDiv: HTMLDivElement = document.createElement("div");
+        noteDiv.id = this.counter.toString();
+        noteDiv.className = "note";
+        noteDiv.style.backgroundColor = note.bgColor;
 
         let noteInnerWrapper: HTMLDivElement = document.createElement("div");
         noteInnerWrapper.id = "noteInnerWrapper" + this.counter;
@@ -70,9 +66,9 @@ export class App {
         let title: HTMLSpanElement =  document.createElement("span");
         title.id = "noteTitle" + this.counter;
         title.className = "noteTitle";
-        title.innerHTML = noteTitle;
+        title.innerHTML = note.title;
         title.addEventListener('DOMSubtreeModified', () => {
-            this.titleArr.splice(this.titleArr.indexOf(noteTitle),1,title.innerHTML);
+            note.title = title.innerHTML;
         });
 
         let noteCloseButton: HTMLButtonElement = document.createElement("button");
@@ -82,26 +78,35 @@ export class App {
 
         noteCloseButton.onclick = () => { 
             noteCloseButton.parentNode.parentNode.parentNode.removeChild(noteCloseButton.parentNode.parentNode);
-            this.titleArr.splice(this.titleArr.indexOf(noteTitle),1);
-            this.textArr.splice(this.textArr.indexOf(noteText),1);
+            this.noteLS.splice(parseInt(noteDiv.id),1);
         }
 
         let noteTextArea: HTMLTextAreaElement = document.createElement("textarea");
         noteTextArea.id = "noteTextArea" + this.counter;
         noteTextArea.className = "noteTextArea";
-        noteTextArea.innerHTML = noteText;
+        noteTextArea.innerHTML = note.text
         noteTextArea.rows = 8;
         noteTextArea.addEventListener('change', () => {
-            this.textArr.splice(this.textArr.indexOf(noteText),1,noteTextArea.value);
+            note.text = noteTextArea.value;
         });
 
         let noteButtons: HTMLDivElement = document.createElement("div");
         noteButtons.id = "noteButtonsDiv";
 
-        let pinNote: HTMLButtonElement = document.createElement("button");
+        let pinNote: HTMLElement = document.createElement("checkbox");
         pinNote.id = "pinNote";
         pinNote.className = "noteButtons";
         pinNote.innerText = "PIN"
+        pinNote.addEventListener('click', () => {
+            if(!note.isPinned){
+                this.pinnedDiv.appendChild(noteDiv);
+                note.isPinned = true;
+                
+            }else{
+                this.notesDiv.appendChild(noteDiv);
+                note.isPinned = false;
+            }
+        });
 
         let noteChangeColor: HTMLButtonElement = document.createElement("button");
         noteChangeColor.id = "noteChangeColor";
@@ -111,41 +116,64 @@ export class App {
 
             if(document.querySelector("#changeColorDiv") == null){
                 let wrapper: HTMLDivElement = document.createElement("div");
-                wrapper.id = "changeColorDiv";
+                wrapper.id = "changeColorDiv" + this.counter;
+                wrapper.className = "changeColorDiv"
+                wrapper.tabIndex= 1;
+                noteDiv.appendChild(wrapper);
+                wrapper.focus();
+                wrapper.addEventListener('focusout',() => {
+                    wrapper.parentNode.removeChild(wrapper);
+                });
                 for(let i = 0; i < 6; i++){
-                    let color: HTMLDivElement = document.createElement("div");
-                    color.className = 'colorDiv';
-                    color.id = Colors[i];
-                    wrapper.appendChild(color);
+                    let colorDiv: HTMLDivElement = document.createElement("div");
+                    colorDiv.className = 'colorDiv';
+                    colorDiv.id = Colors[i];
+
+                    let colorCircle: HTMLDivElement = document.createElement("div");
+                    colorCircle.className = "colorCircle"
+                    colorCircle.style.backgroundColor = Colors[i];
+
+                    colorCircle.addEventListener('click', () => {
+                        noteDiv.style.backgroundColor = colorCircle.style.backgroundColor;
+                        note.bgColor = colorCircle.style.backgroundColor
+                    })
+                    colorDiv.appendChild(colorCircle);
+                    wrapper.appendChild(colorDiv);
                 }
-                note.appendChild(wrapper);
             }
         })
-
-        note.appendChild(noteDragDiv);
+        noteDiv.appendChild(noteDragDiv);
         noteDragDiv.appendChild(noteDate);
-        note.appendChild(noteInnerWrapper);
+        noteDiv.appendChild(noteInnerWrapper);
 
         noteInnerWrapper.appendChild(noteTitleDiv);
         noteTitleDiv.appendChild(title);
         noteInnerWrapper.appendChild(noteCloseButton);
         noteInnerWrapper.appendChild(noteTextArea);
 
-        note.appendChild(noteButtons);
+        noteDiv.appendChild(noteButtons);
         noteButtons.appendChild(pinNote);
         noteButtons.appendChild(noteChangeColor);
 
         this.counter++;
-        return note;
+        return noteDiv;
     }
 }
 
 enum Colors {
-    'yellow' = 0,
-    'blue' = 1,
-    'red' = 2,
-    'gray' = 3,
-    'purple' = 4, 
-    'rose' = 5
+    yellow = 0,
+    blue = 1,
+    red = 2,
+    lightgray = 3,
+    purple = 4, 
+    pink = 5
 }
 
+type Note = {
+    title: string,
+    text: string,
+    date: string,
+    bgColor: string,
+    isPinned: boolean;
+ }
+ 
