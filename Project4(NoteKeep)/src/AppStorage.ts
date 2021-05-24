@@ -1,13 +1,7 @@
-import App from './app';
-const app = new App;
+class AppStorage{
 
-export class AppStorage{
-
-    noteToArr(note: INote){
-        app.noteArr.push(note);
-        app.counter++;
-    }
-
+    constructor(){}
+    
     saveToLocalStorage(noteArr: INote[]){
         localStorage.setItem("noteLS", JSON.stringify(noteArr));
     }
@@ -23,5 +17,6 @@ export class AppStorage{
         }
     }
 }
+const appStorage = new AppStorage();
 
-export default  AppStorage;
+export default  appStorage;

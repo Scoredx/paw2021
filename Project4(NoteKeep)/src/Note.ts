@@ -1,3 +1,5 @@
+import app from './App';
+
 export class Note{
 
     saveToNote(noteId: number, noteTitle: string, noteText: string, noteBgColor: string, isNotePinned: boolean){
@@ -12,8 +14,10 @@ export class Note{
         }
         return note;
     }
+
+    noteToArr(note: INote){
+        app.noteArr.push(note);
+        app.counter++;
+    }
 }
-
 export default Note;
-
-

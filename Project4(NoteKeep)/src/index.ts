@@ -1,28 +1,26 @@
-import App from './app';
-import AppStorage from './AppStorage';
+import app from './App';
+import appStorage from './AppStorage';
 import Note from './Note';
 import Notes from './notes';
-import './main.scss';
+import './SCSS/reset.scss',;
+import './SCSS/main.scss';
 
-const app = new App();
-const appStorage = new AppStorage();
 const note = new Note();
-const notes = new Notes;
-
+const notes = new Notes();
 const pinned: HTMLDivElement = document.querySelector("#pinnedNotes");
 const notesDiv: HTMLDivElement = document.querySelector("#notes");
 const inputTitle: HTMLInputElement = document.querySelector("#inputTitle");
 const inputText: HTMLInputElement = document.querySelector("#inputText");
 const submitButton: HTMLButtonElement = document.querySelector("#submitButton");
-
 notes.pinnedDiv = pinned;
 notes.notesDiv = notesDiv;
+
 
 submitButton.addEventListener('click', () => {
     
     let newNote = note.saveToNote(app.counter, inputTitle.value,inputText.value, "lightgray", false);
-    appStorage.noteToArr(newNote);
-    notesDiv.appendChild(notes.createNote(newNote));
+    note.noteToArr(newNote);
+    notes.notesDiv.appendChild(notes.createNote(newNote));
 });
 
 window.addEventListener('beforeunload', function() {
@@ -35,8 +33,9 @@ window.addEventListener('load', () => {
     
     if(app.noteLS){
         app.noteLS.forEach((elem, index) => {
+
             app.noteArr[index] = app.noteLS[index];
-           
+
             if(app.noteLS[index].isPinned){
                 pinned.appendChild(notes.createNote(app.noteLS[index]));
             }else{
