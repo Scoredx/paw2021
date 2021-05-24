@@ -1,39 +1,46 @@
-import { App } from './app';
+import App from './app';
+import AppStorage from './AppStorage';
+import Note from './Note';
+import Notes from './notes';
 import './main.scss';
+
 const app = new App();
+const appStorage = new AppStorage();
+const note = new Note();
+const notes = new Notes;
 
 const pinned: HTMLDivElement = document.querySelector("#pinnedNotes");
-const notes: HTMLDivElement = document.querySelector("#notes");
+const notesDiv: HTMLDivElement = document.querySelector("#notes");
 const inputTitle: HTMLInputElement = document.querySelector("#inputTitle");
 const inputText: HTMLInputElement = document.querySelector("#inputText");
 const submitButton: HTMLButtonElement = document.querySelector("#submitButton");
 
-app.pinnedDiv= pinned;
-app.notesDiv = notes;
+notes.pinnedDiv = pinned;
+notes.notesDiv = notesDiv;
 
 submitButton.addEventListener('click', () => {
     
-    let note = app.saveToNote(app.counter, inputTitle.value,inputText.value, "lightgray", false);
-    app.noteToArr(note);
-    notes.appendChild(app.createNote(note));
+    let newNote = note.saveToNote(app.counter, inputTitle.value,inputText.value, "lightgray", false);
+    appStorage.noteToArr(newNote);
+    notesDiv.appendChild(notes.createNote(newNote));
 });
 
 window.addEventListener('beforeunload', function() {
-    app.saveToLocalStorage(app.noteArr);
+    appStorage.saveToLocalStorage(app.noteArr);
 });
 
 window.addEventListener('load', () => {
     
-    app.noteLS = app.getNotesFromLocalStorage();
+    app.noteLS = appStorage.getNotesFromLocalStorage();
     
     if(app.noteLS){
         app.noteLS.forEach((elem, index) => {
             app.noteArr[index] = app.noteLS[index];
            
             if(app.noteLS[index].isPinned){
-                pinned.appendChild(app.createNote(app.noteLS[index]));
+                pinned.appendChild(notes.createNote(app.noteLS[index]));
             }else{
-                notes.appendChild(app.createNote(app.noteLS[index]));
+                notesDiv.appendChild(notes.createNote(app.noteLS[index]));
             }
         });
     }
