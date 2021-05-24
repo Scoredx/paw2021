@@ -12,11 +12,10 @@ app.pinnedDiv= pinned;
 app.notesDiv = notes;
 
 submitButton.addEventListener('click', () => {
-
-    let note = app.saveToNote(inputTitle.value,inputText.value, "lightgray", false);
+    
+    let note = app.saveToNote(app.counter, inputTitle.value,inputText.value, "lightgray", false);
     app.noteToArr(note);
     notes.appendChild(app.createNote(note));
-    
 });
 
 window.addEventListener('beforeunload', function() {
@@ -24,12 +23,13 @@ window.addEventListener('beforeunload', function() {
 });
 
 window.addEventListener('load', () => {
-
+    
     app.noteLS = app.getNotesFromLocalStorage();
+    
     if(app.noteLS){
         app.noteLS.forEach((elem, index) => {
             app.noteArr[index] = app.noteLS[index];
-            
+           
             if(app.noteLS[index].isPinned){
                 pinned.appendChild(app.createNote(app.noteLS[index]));
             }else{

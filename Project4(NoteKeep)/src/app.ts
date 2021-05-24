@@ -7,9 +7,10 @@ export class App {
     counter: number = 0;
    
 
-    saveToNote(noteTitle: string, noteText: string, noteBgColor: string, isNotePinned: boolean){
+    saveToNote(noteId: number, noteTitle: string, noteText: string, noteBgColor: string, isNotePinned: boolean){
         let newDate = new Date();
         let note: Note = {
+            id: noteId,
             title: noteTitle,
             text: noteText,
             bgColor: noteBgColor,
@@ -21,6 +22,7 @@ export class App {
 
     noteToArr(note: Note){
         this.noteArr.push(note);
+        this.counter++;
     }
 
     saveToLocalStorage(noteArr: Note[]){
@@ -78,7 +80,8 @@ export class App {
 
         noteCloseButton.onclick = () => { 
             noteCloseButton.parentNode.parentNode.parentNode.removeChild(noteCloseButton.parentNode.parentNode);
-            this.noteLS.splice(parseInt(noteDiv.id),1);
+            this.noteArr.splice(this.noteArr.indexOf(this.noteArr.find(element => element.id == note.id)),1);
+            this.noteLS.splice(this.noteLS.indexOf(this.noteLS.find(element => element.id == note.id)),1);
         }
 
         let noteTextArea: HTMLTextAreaElement = document.createElement("textarea");
@@ -109,22 +112,26 @@ export class App {
         });
 
         let noteChangeColor: HTMLButtonElement = document.createElement("button");
-        noteChangeColor.id = "noteChangeColor";
-        noteChangeColor.className = "noteButtons";
-        noteChangeColor.innerText = "COLOR"
-        noteChangeColor.addEventListener('click', () => {
+            noteChangeColor.id = "noteChangeColor";
+            noteChangeColor.className = "noteButtons";
+            noteChangeColor.innerText = "COLOR"
+            noteChangeColor.addEventListener('click', () => {
 
             if(document.querySelector("#changeColorDiv") == null){
+
                 let wrapper: HTMLDivElement = document.createElement("div");
                 wrapper.id = "changeColorDiv" + this.counter;
                 wrapper.className = "changeColorDiv"
                 wrapper.tabIndex= 1;
                 noteDiv.appendChild(wrapper);
+
                 wrapper.focus();
                 wrapper.addEventListener('focusout',() => {
                     wrapper.parentNode.removeChild(wrapper);
                 });
+
                 for(let i = 0; i < 6; i++){
+
                     let colorDiv: HTMLDivElement = document.createElement("div");
                     colorDiv.className = 'colorDiv';
                     colorDiv.id = Colors[i];
@@ -142,6 +149,7 @@ export class App {
                 }
             }
         })
+
         noteDiv.appendChild(noteDragDiv);
         noteDragDiv.appendChild(noteDate);
         noteDiv.appendChild(noteInnerWrapper);
@@ -155,7 +163,6 @@ export class App {
         noteButtons.appendChild(pinNote);
         noteButtons.appendChild(noteChangeColor);
 
-        this.counter++;
         return noteDiv;
     }
 }
@@ -169,7 +176,8 @@ enum Colors {
     pink = 5
 }
 
-type Note = {
+interface Note  {
+    id: number,
     title: string,
     text: string,
     date: string,
