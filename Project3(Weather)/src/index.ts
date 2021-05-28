@@ -18,6 +18,7 @@ searchDiv.appendChild(submitButton);
 
 submitButton.addEventListener('click', () => {
     let cityName = app.getCityName();
+    
     if(app.cityArray.includes(cityName) || app.getCities().includes(cityName)){
         return;
     }else{
