@@ -17,7 +17,7 @@ export class Note{
             return note;
         }
         catch(error){
-           console.log(error);
+           throw error;
         }
     }
 }

@@ -113,8 +113,8 @@ export class Notes{
                 appFireStorage.updateNote(note.id,{
                     isPinned: true,
                 })
-                
-            }else{
+            }
+            else{
                 this.notesDiv.appendChild(noteDiv);
                 appFireStorage.updateNote(note.id,{
                     isPinned: false,

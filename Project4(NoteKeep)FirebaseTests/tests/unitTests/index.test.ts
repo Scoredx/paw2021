@@ -1,5 +1,5 @@
-// import Note  from '../../src/Note';
-const Note = require('../../src/Note');
+import Note  from '../../src/Note';
+//const Note = require('../../src/Note');
 
 describe('Note', () => {
     it('completeNote', () => {
@@ -17,9 +17,10 @@ describe('Note', () => {
 })
 
 describe('Note', () => {
-    it('completeNote', () => {
+    it('noTitle', () => {
         const note = new Note();
         note.saveToNote('', "","text", "lightgray", false);
-        expect(note.saveToNote('', "","text", "lightgray", false)).toThrow("Title can`t be empty")
+        expect(() => note.saveToNote('', "", "text", "lightgray", false))
+        .toThrow("Title can`t be empty")
     })
 })

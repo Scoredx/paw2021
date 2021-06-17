@@ -28,7 +28,6 @@ window.addEventListener('load', () => {
     appFireStorage.getFromStorage().then(function(data){
         data.forEach(ele => {
             let note = ele as INote;
-
             if(note.isPinned){
                 pinned.appendChild(notes.createNote(note));
             }else{
